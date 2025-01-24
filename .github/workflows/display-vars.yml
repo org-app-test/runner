@@ -1,0 +1,18 @@
+name: Display Variables
+
+on:
+  workflow_dispatch:
+
+jobs:
+  display-variables:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Display Repository and Organization Variables
+        shell: pwsh
+        run: |
+          Write-Host "REPOSITORY_VAR: $($env:REPOSITORY_VAR)" -ForegroundColor Cyan
+          Write-Host "ORGANIZATION_VAR: $($env:ORGANIZATION_VAR)" -ForegroundColor Green
+        env:
+          REPOSITORY_VAR: ${{ vars.REPOSITORY_VAR }}
+          ORGANIZATION_VAR: ${{ vars.ORGANIZATION_VAR }}

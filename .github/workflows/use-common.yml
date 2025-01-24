@@ -1,0 +1,25 @@
+name: Publish  Module
+
+on:
+  workflow_dispatch:
+
+env:
+  ORGANIZATION_VAR: ${{ vars.ORGANIZATION_VAR }}
+  REPOSITORY_VAR: ${{ vars.REPOSITORY_VAR }}
+
+jobs:
+  publish:
+    uses: org-app-test/.github/.github/workflows/common.yml@master
+    with:
+      module_name: MyPowerShellModule
+      module_version: 1.0.0
+    secrets: inherit # inherit all secrets from the parent workflow
+
+  run-local:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use variables
+        shell: pwsh
+        run: |
+          Write-Host "ORGANIZATION_VAR: $($env:ORGANIZATION_VAR)"
+          Write-Host "REPOSITORY_VAR: $($env:REPOSITORY_VAR)"
