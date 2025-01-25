@@ -1,0 +1,20 @@
+name: Local Action Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    name: Run
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Local Action with Args
+        uses: ./.github/actions/local-gh-action
+        with:
+          your_name: "Alan"
+
+      - name: Local Action without Args
+        uses: ./.github/actions/local-gh-action

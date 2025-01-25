@@ -1,0 +1,11 @@
+name: "Hello World"
+description: "Used to test local actions"
+inputs:
+  your_name:
+    description: "Your name"
+    required: false
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - "${{ inputs.your_name }}"
