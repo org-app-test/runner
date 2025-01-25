@@ -1,0 +1,44 @@
+name: Coverage
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install PowerShell
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget apt-transport-https software-properties-common
+          wget -q https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb
+          sudo dpkg -i packages-microsoft-prod.deb
+          sudo apt-get update
+          sudo apt-get install -y powershell
+
+      - name: Install Pester
+        shell: pwsh
+        run: Install-Module -Name Pester -Force -Scope CurrentUser
+
+      - name: Run Pester Tests
+        shell: pwsh
+        run: ./scripts/run-tests.ps1
+
+      - name: Convert Cobertura to Markdown
+        uses: alan-null/cobertura-to-markdown@v1
+        with:
+          coverage_file: "coverage.xml"
+
+      - name: Upload code coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: |
+            coverage.xml
+            output.md
+
+      - name: Add to Job Summary
+        run: cat output.md >> $GITHUB_STEP_SUMMARY
