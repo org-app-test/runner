@@ -1,0 +1,42 @@
+name: Shared Workflow
+
+on:
+  workflow_call:
+    secrets:
+      REPO_SECRET:
+        description: 'REPO_SECRET .. . .'
+        required: false
+    inputs:
+      custom_env_vars:
+        type: string
+        required: false
+
+jobs:
+  invoke2:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Display secrets
+        run: |
+          $my_secret = ${{ secrets.REPO_SECRET }}
+          Write-Host "REPO_SECRET: ${{ secrets.REPO_SECRET }}"
+          Write-Host "$($my_secret -eq '497')"
+        shell: pwsh
+
+      - name: Run scripts/load-env.ps1 script
+        run: |
+          # download or checkout the workflow repository
+          # ./scripts/load-env.ps1
+        shell: pwsh
+
+      - name: Parse and Set Environment Variables
+        shell: pwsh
+        run: |
+          $jsonEnvVars = ConvertFrom-Json '${{ inputs.custom_env_vars }}'
+          Write-Host $jsonEnvVars
+          $jsonEnvVars.PSObject.Properties | % {
+            Write-Host "Setting environment variable: $_.Name=$($_.Value)"
+          }

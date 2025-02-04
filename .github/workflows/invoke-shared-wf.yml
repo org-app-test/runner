@@ -1,0 +1,15 @@
+name: Main Workflow
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  invoke-pester:
+    uses: './.github/workflows/shared-wf.yml'
+    secrets:
+      REPO_SECRET: ${{ secrets.REPO_SECRET }}
+    with:
+      custom_env_vars: '{"ENV_VAR1": "value1", "ENV_VAR2": "value2"}'
